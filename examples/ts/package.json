@@ -1,0 +1,14 @@
+{
+  "name": "intern-a11y-TS-example",
+  "devDependencies": {
+	"intern": "~3.4.0",
+	"intern-a11y": "file:../..",
+	"shelljs": "0.7.4",
+    "@types/es6-promise": "0.0.31"
+  },
+  "scripts": {
+    "test": "node support/test.js",
+    "build": "node support/build.js",
+    "clean": "node support/clean.js"
+  }
+}

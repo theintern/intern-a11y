@@ -1,0 +1,61 @@
+{
+  "analyzer": "tenon",
+  "source": "http://google.com",
+  "violations": [
+    {
+      "message": "Page has no headings",
+      "snippet": "&lt;body bgcolor=\"#fff\" style=\"\"&gt;&lt;script&gt;(function(){var src='/images/nav_logo229.png';var iesg=false;document.body.onload = function(){window.n &amp;&amp; window.n();if (document.images){new Image().src=src;}\nif (!iesg){document.f&amp;&amp;docu",
+        "description": "This page has no heading elements. Heading elements provide a number of important benefits to users. They can be useful as wayfinding cues for in-page navigation, they can contribute to a summary of the page, and they can provide context to the content below them.",
+        "target": "/html/body",
+        "reference": "https://tenon.io/bestpractice.php?bpID=28&tID=97",
+        "tags": [
+          "Web Content Accessibility Guidelines (WCAG) 2.0, Level A: 1.3.1 Info and Relationships"
+        ]
+      },
+      {
+        "message": "This form element has no label.",
+        "snippet": "&lt;input style=\"color: rgb(0, 0, 0); margin: 0px; padding: 5px 8px 0px 6px; vertical-align: top; outline: none;\" autocomplete=\"off\" class=\"lst\" value=\"\" title=\"Google Search\" maxlength=\"2048\" name=\"q\" size=\"57\" dir=\"ltr\" spellcheck=\"false\"&gt;",
+        "description": "Give all controls a label. This allows all users to understand the type of information expected in the field.",
+        "target": "/html/body/center[1]/form[1]/table[1]/tr[1]/td[2]/div[1]/input[1]",
+        "reference": "https://tenon.io/bestpractice.php?bpID=49&tID=38",
+        "tags": [
+          "Web Content Accessibility Guidelines (WCAG) 2.0, Level A: 1.1.1 Non-text Content",
+          "Web Content Accessibility Guidelines (WCAG) 2.0, Level A: 1.3.1 Info and Relationships",
+          "Web Content Accessibility Guidelines (WCAG) 2.0, Level A: 3.3.2 Labels or Instructions",
+          "Web Content Accessibility Guidelines (WCAG) 2.0, Level A: 4.1.2 Name, Role, Value"
+        ]
+      },
+      {
+        "message": "This link has no text inside it.",
+        "snippet": "&lt;a class=\"gbgt\" id=\"gbg5\" href=\"http://www.google.com/preferences?hl=en\" title=\"Options\" onclick=\"gbar.tg(event,this)\" aria-haspopup=\"true\" aria-owns=\"gbd5\"&gt;&lt;span class=\"gbtb2\"&gt;&lt;/span&gt;&lt;span id=\"gbgs5\" class=\"gbts\"&gt;&lt;span id=\"gbi",
+        "description": "This link has no text in it. Because accessibility APIs use a link's text to determine its accessible name, this link will not have an accessible name, and it will not be announced by assistive technologies. Add text within this link or use `aria-label` to give the link an accessible name.",
+        "target": "/html/body/div[1]/div[1]/div[1]/div[2]/ol[1]/li[3]/a[1]",
+        "reference": "https://tenon.io/bestpractice.php?bpID=106&tID=57",
+        "tags": [
+          "Web Content Accessibility Guidelines (WCAG) 2.0, Level A: 2.4.4 Link Purpose (In Context)",
+          "Web Content Accessibility Guidelines (WCAG) 2.0, Level AAA: 2.4.9 Link Purpose (Link Only)"
+        ]
+      },
+      {
+        "message": "This link text is uninformative.",
+        "snippet": "&lt;a class=\"gbgt\" id=\"gbztm\" href=\"https://www.google.com/intl/en/options/\" onclick=\"gbar.tg(event,this)\" aria-haspopup=\"true\" aria-owns=\"gbd\"&gt;&lt;span class=\"gbtb2\"&gt;&lt;/span&gt;&lt;span id=\"gbztms\" class=\"gbts gbtsa\"&gt;&lt;span id=\"gbztms1\"&gt;",
+        "description": "Do not use generic text in links. Use text in the link that accurately and concisely conveys where the link goes.",
+        "target": "/html/body/div[1]/div[1]/div[1]/div[1]/ol[1]/li[9]/a[1]",
+        "reference": "https://tenon.io/bestpractice.php?bpID=106&tID=73",
+        "tags": [
+          "Web Content Accessibility Guidelines (WCAG) 2.0, Level A: 2.4.4 Link Purpose (In Context)",
+          "Web Content Accessibility Guidelines (WCAG) 2.0, Level AAA: 2.4.9 Link Purpose (Link Only)"
+        ]
+      },
+      {
+        "message": "This table does not have any headers.",
+        "snippet": "&lt;table cellpadding=\"0\" cellspacing=\"0\"&gt;&lt;tbody&gt;&lt;tr valign=\"top\"&gt;&lt;td width=\"25%\"&gt;&amp;nbsp;&lt;/td&gt;&lt;td align=\"center\" nowrap=\"\"&gt;&lt;input value=\"en\" name=\"hl\" type=\"hidden\"&gt;&lt;input name=\"source\" type=\"hidden\" value=\"hp",
+        "description": "This table does not contain any `&lt;th&gt;` elements. If this table is used for layout, replace it with a proper layout controlled with CSS. If that's not possible, add `role=&quot;presentation&quot;` to the table.",
+        "target": "/html/body/center[1]/form[1]/table[1]",
+        "reference": "https://tenon.io/bestpractice.php?bpID=131&tID=34",
+        "tags": [
+          "Web Content Accessibility Guidelines (WCAG) 2.0, Level A: 1.3.1 Info and Relationships"
+        ]
+      }
+  ]
+}

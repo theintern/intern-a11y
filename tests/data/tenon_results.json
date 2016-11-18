@@ -1,0 +1,106 @@
+{
+  "apiErrors": [],
+  "documentSize": 5391,
+  "globalStats": {
+    "errorDensity": "63",
+    "warningDensity": "3",
+    "allDensity": "66",
+    "stdDev": "212"
+  },
+  "message": "success",
+  "request": {
+    "ref": "1",
+    "importance": "1",
+    "responseID": "9db7a56006d56d4c2129c58f789c4d97",
+    "userID": "3770",
+    "uaString": null,
+    "projectID": "DEFAULT_PROJECT",
+    "docID": "E34435C0-B8C3-6954-F894-79FAAFB2F40A",
+    "url": "https://tenon.io/api/file.php?docID=E34435C0-B8C3-6954-F894-79FAAFB2F40A",
+    "level": "AAA",
+    "certainty": 0,
+    "priority": 0,
+    "waitFor": null,
+    "fragment": 0,
+    "store": 1,
+    "viewport": {
+      "height": 768,
+      "width": 1024
+    }
+  },
+  "responseExecTime": "0.30",
+  "responseTime": "2016-10-11T21:00:49+0000",
+  "resultSet": [
+    {
+      "bpID": 118,
+      "certainty": 100,
+      "errorDescription": "The language of the document has not been set. Set the document's language by adding the `lang` attribute to the `&lt;html&gt;` element using a ISO 639-1 language code.",
+      "errorSnippet": "&lt;html&gt;&lt;head&gt;&lt;script type=\"text/javascript\" src=\"https://bam.nr-data.net/1/536baadf7e?a=7381143&amp;amp;v=995.3402600&amp;amp;to=bgYGMkoCWEBWW0YKXVdMMRRRTFdDXhdUCl5cTRQOSA%3D%3D&amp;amp;rst=163&amp;amp;ref=https://tenon.io/api/file.php&amp;",
+      "errorTitle": "The language of this page is not set.",
+      "issueID": "128516bb2be3e3916764b0b037e9fb53",
+      "position": {
+        "column": 1,
+        "line": 1
+      },
+      "priority": 77,
+      "ref": "https://tenon.io/bestpractice.php?bpID=118&tID=3",
+      "resultTitle": "Identify the page's language.",
+      "signature": "3cc1161591cd0a1f606898e98ddeb0d6",
+      "standards": [
+        "Web Content Accessibility Guidelines (WCAG) 2.0, Level A: 3.1.1 Language of Page"
+      ],
+      "tID": 3,
+      "viewPortLocation": {
+        "bottom-right": {
+          "x": 1024,
+          "y": 82
+        },
+        "height": 82,
+        "top-left": {
+          "x": 0,
+          "y": 0
+        },
+        "width": 1024
+      },
+      "xpath": "/html"
+    }
+  ],
+  "resultSummary": {
+    "density": {
+      "allDensity": 19,
+      "errorDensity": 19,
+      "warningDensity": 0
+    },
+    "issues": {
+      "totalErrors": 1,
+      "totalIssues": 1,
+      "totalWarnings": 0
+    },
+    "issuesByLevel": {
+      "A": {
+        "count": 1,
+        "pct": 100
+      },
+      "AA": {
+        "count": 0,
+        "pct": 0
+      },
+      "AAA": {
+        "count": 0,
+        "pct": 0
+      }
+    },
+    "tests": {
+      "failing": 1,
+      "passing": 73,
+      "total": 74
+    }
+  },
+  "sourceHash": "2f182bd874d391651f5f68a74555eaf9",
+  "status": 200,
+  "urlHttpCode": 200,
+  "clientScriptErrors": [],
+  "code": "success",
+  "resultUrl": "https://tenon.io/history.php?responseID=9db7a56006d56d4c2129c58f789c4d97",
+  "moreInfo": "https://tenon.io/documentation/understanding-response-codes.php#success"
+}

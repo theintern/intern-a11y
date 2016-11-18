@@ -1,0 +1,11 @@
+{
+  "name": "intern-a11y-JS-example",
+  "devDependencies": {
+	"intern": "^3.3.0",
+	"intern-a11y": "file:../.."
+  },
+  "scripts": {
+    "test": "node support/test.js",
+    "clean": "node support/clean.js"
+  }
+}

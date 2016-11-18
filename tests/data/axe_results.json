@@ -1,0 +1,192 @@
+{
+  "passes": [
+    {
+      "help": "Elements must have sufficient color contrast",
+      "nodes": [
+        {
+          "all": [],
+          "impact": null,
+          "html": "<h1>Testing</h1>",
+          "none": [],
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "contrastRatio": "21.00",
+                "fgColor": "#000000",
+                "fontSize": "24.0pt",
+                "bgColor": "#ffffff",
+                "fontWeight": "bold"
+              },
+              "message": "Element has sufficient color contrast of 21.00",
+              "impact": "critical",
+              "relatedNodes": []
+            }
+          ],
+          "target": [
+            "#heading > h1"
+          ]
+        },
+        {
+          "all": [],
+          "impact": null,
+          "html": "<div class=\"bar\">Foo</div>",
+          "none": [],
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "contrastRatio": "21.00",
+                "fgColor": "#000000",
+                "fontSize": "12.0pt",
+                "bgColor": "#ffffff",
+                "fontWeight": "normal"
+              },
+              "message": "Element has sufficient color contrast of 21.00",
+              "impact": "critical",
+              "relatedNodes": []
+            }
+          ],
+          "target": [
+            "body > .bar"
+          ]
+        }
+      ],
+      "impact": null,
+      "description": "Ensures the contrast between foreground and background colors meets WCAG 2 AA contrast ratio thresholds",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/2.0/color-contrast?application=axeAPI",
+      "id": "color-contrast",
+      "tags": [
+        "wcag2aa",
+        "wcag143"
+      ]
+    },
+    {
+      "help": "Documents must have <title> element to aid in navigation",
+      "nodes": [
+        {
+          "all": [],
+          "impact": null,
+          "html": "<html>",
+          "none": [],
+          "any": [
+            {
+              "id": "doc-has-title",
+              "data": null,
+              "message": "Document has a non-empty <title> element",
+              "impact": "moderate",
+              "relatedNodes": []
+            }
+          ],
+          "target": [
+            "html"
+          ]
+        }
+      ],
+      "impact": null,
+      "description": "Ensures each HTML document contains a non-empty <title> element",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/2.0/document-title?application=axeAPI",
+      "id": "document-title",
+      "tags": [
+        "wcag2a",
+        "wcag242"
+      ]
+    },
+    {
+      "help": "id attribute value must be unique",
+      "nodes": [
+        {
+          "all": [],
+          "impact": null,
+          "html": "<div id=\"heading\">\n\t\t\t<h1>Testing</h1>\n\t\t</div>",
+          "none": [],
+          "any": [
+            {
+              "id": "duplicate-id",
+              "data": "heading",
+              "message": "Document has no elements that share the same id attribute",
+              "impact": "critical",
+              "relatedNodes": []
+            }
+          ],
+          "target": [
+            "#heading"
+          ]
+        }
+      ],
+      "impact": null,
+      "description": "Ensures every id attribute value is unique",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/2.0/duplicate-id?application=axeAPI",
+      "id": "duplicate-id",
+      "tags": [
+        "wcag2a",
+        "wcag411"
+      ]
+    },
+    {
+      "help": "Headings must not be empty",
+      "nodes": [
+        {
+          "all": [],
+          "impact": null,
+          "html": "<h1>Testing</h1>",
+          "none": [],
+          "any": [
+            {
+              "id": "has-visible-text",
+              "data": null,
+              "message": "Element has text that is visible to screen readers",
+              "impact": "critical",
+              "relatedNodes": []
+            }
+          ],
+          "target": [
+            "#heading > h1"
+          ]
+        }
+      ],
+      "impact": null,
+      "description": "Ensures headings have discernible text",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/2.0/empty-heading?application=axeAPI",
+      "id": "empty-heading",
+      "tags": [
+        "best-practice"
+      ]
+    }
+  ],
+  "url": "http://localhost:9000/dist/tests/data/bad_page.html",
+  "violations": [
+    {
+      "help": "<html> element must have a lang attribute",
+      "nodes": [
+        {
+          "all": [],
+          "impact": "serious",
+          "html": "<html>",
+          "none": [],
+          "any": [
+            {
+              "id": "has-lang",
+              "data": null,
+              "message": "The <html> element does not have a lang attribute",
+              "impact": "serious",
+              "relatedNodes": []
+            }
+          ],
+          "target": [
+            "html"
+          ]
+        }
+      ],
+      "impact": "serious",
+      "description": "Ensures every HTML document has a lang attribute",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/2.0/html-has-lang?application=axeAPI",
+      "id": "html-has-lang",
+      "tags": [
+        "wcag2a",
+        "wcag311"
+      ]
+    }
+  ],
+  "timestamp": "2016-10-11T21:02:43.996Z"
+}
