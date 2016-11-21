@@ -88,6 +88,7 @@ var buildDir = path.join(rootDir, '_build');
 var branch = args[0] || 'master';
 var pushBranches = [ branch ];
 var npmTag = 'latest';
+var exitCode = 0;
 
 // the version to be released
 var version;
@@ -238,6 +239,7 @@ run('git config receive.denyCurrentBranch').then(
 	});
 }).then(function () {
 	// Publish the package
+	process.chdir('dist');
 	return run('npm publish --tag ' + npmTag);
 }).then(function () {
 	// Update the original repo with the new branch and tag pointers
@@ -247,18 +249,15 @@ run('git config receive.denyCurrentBranch').then(
 		return run('git push origin --tags');
 	});
 }).then(function () {
-	rl.close();
 	cleanup();
 	print('\nAll done! Yay!\n');
 }).catch(function (error) {
-	rl.close();
-	if (error.message === 'Aborted') {
-		cleanup();
-	}
-	else {
+	if (error.message !== 'Aborted') {
 		// Something broke -- display an error
 		print(error + '\n');
 		print('Aborted.\n');
-		process.exit(1);
+		exitCode = 1;
 	}
+}).then(function () {
+	process.exit(exitCode);
 });
