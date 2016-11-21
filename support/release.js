@@ -1,6 +1,25 @@
 /* global Promise */
 
+// Release versioning:
+//
+//   If the user supplies a version q.r.s, it must be >= version x.y.z that is the version in the current branch. If an
+//   x.y branch is being released and the user supplies a version. the version must be x.y.q >= the x.y.z-pre version of
+//   the branch.
+//
+//   1. If releasing from master
+//      A) and major version is 0.x.0-pre
+//         i) release is 0.x.0
+//         ii) next is 0.<x+1>.0-pre
+//      B) and major version is x.y.0(-pre) (patch version must be 0)
+//         i) release is x.y.0
+//         ii) create new branch x.y
+//         iii) next is x.<y+1>.0-pre
+//   2. If releasing from branch x.y, version x.y.z(-pre)
+//      A) release is x.y.z
+//      B) next is x.y.<z+1>-pre
+
 var shell = require('shelljs');
+var semver = require('semver');
 var fs = require('fs');
 var path = require('path');
 var util = require('util');
@@ -20,11 +39,11 @@ function print() {
 }
 
 function printUsage() {
-	print('Usage: %s [options] [branch] [version]\n', process.argv[1]);
+	print('Usage: %s [--help] [branch [version]]\n', process.argv[1]);
 	print('\n');
-	print('Branch defaults to "master".\n');
-	print('Version defaults to what is listed in package.json in the branch.\n');
-	print('Version should only be specified for pre-releases.\n');
+	print('<branch> defaults to "master".\n');
+	print('<version> is the version to release, and defaults to what is listed in the\n');
+	print('  package.json in the branch. It should only be specified for pre-releases\n');
 }
 
 function prompt() {
@@ -69,12 +88,15 @@ var buildDir = path.join(rootDir, '_build');
 var branch = args[0] || 'master';
 var pushBranches = [ branch ];
 var npmTag = 'latest';
+
+// the version to be released
 var version;
-var releaseTag;
-var makeBranch;
+// the next pre-release version that will be set on the original branch after tagging
 var preVersion;
+// the name of the new release branch that should be created if this is not a patch release
+var newBranch;
+// the pre-release version that will be set on the minor release branch
 var branchVersion;
-var tagVersion;
 
 if (args[1]) {
 	version = args[1];
@@ -121,56 +143,54 @@ run('git config receive.denyCurrentBranch').then(
 	var packageJson = loadPackageJson();
 
 	// Determine the proper version numbers for release and for repo post-release
+
 	if (!version) {
-		version = packageJson.version.replace('-pre', '');
-		preVersion = version.split('.').map(Number);
+		// Use the version from package.json in the currently checked out branch
+		version = packageJson.version;
 
-		// If the last digit is a 0, this is a new major/minor release
-		if (preVersion[2] === 0) {
-			// We'll be creating a new minor release branch for this version for any future patch releases
-			// e.g., current is 2.1.0, branch will be 2.1.1-pre
-			branchVersion = util.format('%s.%s.%s-pre', preVersion[0], preVersion[1], preVersion[2] + 1);
-
-			// makeBranch is the new branch we'll be making for this major/minor release
-			makeBranch = util.format('%s.%s', preVersion[0], preVersion[1]);
-
-			// The next release is usually going to be a minor release; if the next version is to be a major release,
-			// the package version will need to be manually updated in Git before release
-			// e.g., current is 2.1.0, pre will be 2.2.0-pre
-			preVersion = util.format('%s.%s.0-pre', preVersion[0], preVersion[1] + 1);
+		if (!semver.prerelease(version)) {
+			throw new Error('Releases may only be generated from pre-release versions');
 		}
-		// If the last digit isn't a 0, this is a new patch release
-		else {
-			// Patch releases do not get a branch, and the next release version will always be another patch version
-			// e.g., current is 2.1.0, pre will be 2.1.1-pre
-			preVersion = util.format('%s.%s.%s-pre', preVersion[0], preVersion[1], preVersion[2] + 1);
-		}
+
+		version = semver.major(version) + '.' + semver.minor(version) + '.' + semver.patch(version);
 	}
 	else {
-		preVersion = packageJson.version + '-pre';
+		if (semver.gte(version, packageJson.version)) {
+			throw new Error('Provided version must be >= current version');
+		}
 	}
 
-	releaseTag = tagVersion = version;
-
-	// At this point:
-	//   `version` is the version of the package that is being released;
-	//   `tagVersion` is the name that will be used for the Git tag for the release
-	//   `preVersion` is the next pre-release version that will be set on the original branch after tagging
-	//   `makeBranch` is the name of the new release branch that should be created if this is not a patch release
-	//   `branchVersion` is the pre-release version that will be set on the minor release branch
-
+	// Check that the version hasn't already been tagged
 	return run('git tag').then(function (tags) {
 		tags.split('\n').forEach(function (tag) {
-			if (tag === tagVersion) {
+			if (tag === version) {
 				throw new Error('Version ' + tag + ' has already been tagged');
 			}
 		});
 	});
 }).then(function () {
+	// Pre-release or non-branching updates
+	if (semver.major(version) === 0 || semver.patch(version) !== 0) {
+		preVersion = semver.inc(version, 'patch') + '-pre';
+	}
+	// If the patch digit is a 0, this is a new major/minor release
+	else {
+		// The new branch we'll be making for this major/minor release
+		newBranch = util.format('%s.%s', semver.major(version), semver.minor(version));
+
+		// The full version of the next release in the new branch
+		branchVersion = semver.inc(version, 'patch') + '-pre';
+
+		// The next version on master is usually going to be a minor release; if the next version is to be a major
+		// release, the package version will need to be manually updated in Git before release e.g., current is
+		// 2.1.0, pre will be 2.2.0-pre
+		preVersion = semver.inc(version, 'minor') + '-pre';
+	}
+}).then(function () {
 	// Set the package version to release version and commit the new release
 	updatePackageVersion(version);
 	return run('git commit -m "Updating metadata for ' + version + '" package.json').then(function () {
-		return run('git tag -a -m "Release ' + version + '" ' + tagVersion);
+		return run('git tag -a -m "Release ' + version + '" ' + version);
 	});
 }).then(function () {
 	// Check out the previous package.json
@@ -183,22 +203,22 @@ run('git config receive.denyCurrentBranch').then(
 	return run('git commit -m "Updating source version to ' + preVersion + '" package.json');
 }).then(function () {
 	// If this is a major/minor release, we also create a new branch for it
-	if (makeBranch) {
-		print('Creating new branch %s...\n', makeBranch);
+	if (newBranch) {
+		print('Creating new branch %s...\n', newBranch);
 		// Create the new branch starting at the tagged release version
-		return run('git checkout -b ' + makeBranch + ' ' + tagVersion).then(function () {
+		return run('git checkout -b ' + newBranch + ' ' + version).then(function () {
 			// Set the package version to the next patch pre-release version and commit the pre-release
 			updatePackageVersion(branchVersion);
 			return run('git commit -m "Updating source version to ' + branchVersion + '" package.json');
 		}).then(function () {
 			// Store the branch as one that needs to be pushed when we are ready to deploy the release
-			pushBranches.push(makeBranch);
+			pushBranches.push(newBranch);
 		});
 	}
 }).then(function () {
 	// Checkout and build the new release in preparation for publishing
-	print('Checking out and building %s...\n', releaseTag);
-	return run('git checkout ' + releaseTag).then(function () {
+	print('Checking out and building %s...\n', version);
+	return run('git checkout ' + version).then(function () {
 		return run('npm install');
 	}).then(function () {
 		return run('node ./support/build.js dist');
@@ -208,13 +228,12 @@ run('git config receive.denyCurrentBranch').then(
 	print('\nDone!\n\n');
 
 	var question = 'Please confirm packaging success, then enter "y" to publish to npm\n' +
-		npmTag + ', push tags ' + releaseTag + ', and upload. Enter any other key to bail.\n' +
+		npmTag + ', push tags ' + version + ', and upload. Enter any other key to bail.\n' +
 		'> ';
 
 	return prompt(question).then(function (answer) {
 		if (answer !== 'y') {
-			cleanup();
-			process.exit(0);
+			throw new Error('Aborted');
 		}
 	});
 }).then(function () {
@@ -228,12 +247,18 @@ run('git config receive.denyCurrentBranch').then(
 		return run('git push origin --tags');
 	});
 }).then(function () {
+	rl.close();
 	cleanup();
 	print('\nAll done! Yay!\n');
-	process.exit(0);
 }).catch(function (error) {
-	// Something broke -- display an error
-	print(error + '\n');
-	print('Aborted.\n');
-	process.exit(1);
+	rl.close();
+	if (error.message === 'Aborted') {
+		cleanup();
+	}
+	else {
+		// Something broke -- display an error
+		print(error + '\n');
+		print('Aborted.\n');
+		process.exit(1);
+	}
 });
