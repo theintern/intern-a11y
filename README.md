@@ -8,6 +8,8 @@ Accessibility testing works by having a scanner check a page or page fragment fo
 
 `intern-a11y` is an addon for [Intern](https://github.com/theintern/intern) that lets users write tests targeting various accessibility testing systems. Currently it supports two scanners, [aXe](https://github.com/dequelabs/axe-core) and [Tenon](https://tenon.io). aXe is a JavaScript application that must be injected into the page being tested. The application is configured and executed, returning a report describing the test results. Tenon is a cloud-based testing service; a user requests that the service test a particular URL or page source, and the service returns a report of the results.
 
+Both scanners are able to test entire pages and document fragments (or portions of a full page). In all cases, though, the scanners operate on a fully styled DOM. This means that if a user needs to test a single commponent in isolation, they'll need to create a test page with all the styles and supporting code required by the component, and use that page to run accessibility tests on the component.
+
 Note that because aXe must be injected into a loaded page, it must be used with Intern's WebDriver test runner (`intern-runner`). Tenon makes HTTP calls to an external service, and it will work with the Node test client (`intern-client`) or `intern-runner`.
 
 ## Installation
