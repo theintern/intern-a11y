@@ -16,7 +16,7 @@ define([ 'intern' ], function (intern) {
 
 		excludeInstrumentation: /^(?:tests|node_modules)\//,
 
-		cleanupErrorStack: true,
+		filterErrorStack: true,
 
 		reporters: [
 			{

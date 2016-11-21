@@ -2,7 +2,7 @@
   "name": "intern-a11y-JS-example",
   "devDependencies": {
 	"intern": "^3.3.0",
-	"intern-a11y": "file:../.."
+	"intern-a11y": "file:../../dist"
   },
   "scripts": {
     "test": "node support/test.js",

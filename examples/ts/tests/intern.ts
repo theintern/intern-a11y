@@ -18,7 +18,7 @@ export const functionalSuites = [ 'app/tests/nodeSuite!axe' ];
 
 export const excludeInstrumentation = /^(?:tests|node_modules)\//;
 
-export const cleanupErrorStack = true;
+export const filterErrorStack = true;
 
 export const reporters = [
 	{
