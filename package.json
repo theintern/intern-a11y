@@ -1,6 +1,6 @@
 {
   "name": "intern-a11y",
-  "version": "0.1.0",
+  "version": "0.1.1-pre",
   "main": "src/index.js",
   "types": "src/index.d.ts",
   "description": "Intern-a11y. An accessibility testing helper for Intern.",
