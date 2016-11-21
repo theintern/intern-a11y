@@ -1,6 +1,6 @@
 {
   "name": "intern-a11y",
-  "version": "0.1.0-pre",
+  "version": "0.1.0",
   "main": "src/index.js",
   "types": "src/index.d.ts",
   "description": "Intern-a11y. An accessibility testing helper for Intern.",
@@ -17,8 +17,8 @@
     "@types/shelljs": "0.3.32",
     "chokidar": "1.6.0",
     "intern": "~3.4.0",
-	"shelljs": "0.7.4",
-	"typescript": "~2.0.0"
+    "shelljs": "0.7.4",
+    "typescript": "~2.0.0"
   },
   "peerDependencies": {
     "intern": "~3.4.0"
