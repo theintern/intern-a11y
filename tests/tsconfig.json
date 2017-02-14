@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "baseUrl": "..",
+    "module": "umd",
+    "moduleResolution": "node",
+    "declaration": false,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "paths": {
+      "intern/dojo/node!src/*": [
+        "./_build/src/*"
+      ]
+    },
+    "preserveConstEnums": true,
+    "sourceMap": true
+  },
+  "extends": "../tsconfig.json",
+  "include": [
+    "./**/*.ts"
+  ]
+}

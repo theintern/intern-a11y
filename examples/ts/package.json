@@ -1,14 +1,13 @@
 {
   "name": "intern-a11y-TS-example",
   "devDependencies": {
-	"intern": "~3.4.0",
-	"intern-a11y": "file:../../dist",
-	"shelljs": "0.7.4",
-    "@types/es6-promise": "0.0.31"
+	"intern": "^3.4.0",
+	"intern-a11y": "file:../../_build/src",
+    "typescript": "~2.1.0"
   },
   "scripts": {
     "test": "node support/test.js",
-    "build": "node support/build.js",
+    "build": "tsc",
     "clean": "node support/clean.js"
   }
 }

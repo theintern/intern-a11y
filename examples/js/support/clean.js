@@ -1,2 +1,7 @@
-var shell = require('shelljs');
-shell.rm('-f', 'a11y-report.html');
+var fs = require('fs');
+try {
+	fs.unlinkSync('a11y-report.html');
+}
+catch (error) {
+	// ignore
+}

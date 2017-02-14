@@ -1,6 +1,6 @@
 // This module must be loaded by an AMD loader
 
-import * as registerSuite from 'intern!object';
+import registerSuite = require('intern!object');
 import { TestModule } from './interfaces';
 import { IRequire } from 'dojo/loader';
 

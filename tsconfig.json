@@ -1,17 +1,20 @@
 {
   "compilerOptions": {
-    "module": "umd",
-    "moduleResolution": "node",
     "declaration": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
     "noImplicitAny": true,
     "noImplicitThis": true,
-    "removeComments": true,
+    "outDir": "./_build",
     "preserveConstEnums": true,
-    "sourceMap": true,
-    "outDir": "./dist"
+    "removeComments": true,
+    "rootDir": ".",
+    "sourceMap": true
   },
+  "files": [
+    "node_modules/intern/typings/intern/intern.d.ts"
+  ],
   "include": [
-    "./src/**/*.ts",
-    "./tests/**/*.ts"
+    "./src/**/*.ts"
   ]
 }

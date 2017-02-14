@@ -13,7 +13,3 @@ declare module 'intern/dojo/node!https' {
 declare module 'intern/dojo/node!querystring' {
 	export * from 'querystring';
 }
-
-declare module 'intern/dojo/node!shelljs' {
-	export * from 'shelljs';
-}

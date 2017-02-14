@@ -1,8 +1,8 @@
 import * as registerSuite from 'intern!object';
 import * as Test from 'intern/lib/Test';
 import * as assert from 'intern/chai!assert';
-import * as axe from 'intern/dojo/node!../../../../../src/services/axe';
-import { A11yResults } from 'intern/dojo/node!../../../../../src/common';
+import * as axe from 'intern/dojo/node!src/services/axe';
+import { A11yResults } from 'intern/dojo/node!src/common';
 
 import { IRequire } from 'dojo/loader';
 declare const require: IRequire;
@@ -11,14 +11,19 @@ registerSuite({
 	name: 'integration/aXe',
 
 	bad: (function () {
-		function check(promise: Promise<A11yResults>) {
+		function check(promise: Promise<A11yResults>, errorMatcher?: RegExp) {
 			return promise.then(
 				function () {
 					throw new Error('test should not have passed');
 				},
 				function (error) {
-					assert.match(error.message, /\d+ a11y violation/);
-					assert.property(error, 'a11yResults', 'expected results to be attached to error');
+					if (errorMatcher) {
+						assert.match(error.message, errorMatcher);
+					}
+					else {
+						assert.match(error.message, /\d+ a11y violation/);
+						assert.property(error, 'a11yResults', 'expected results to be attached to error');
+					}
 				}
 			);
 		}
@@ -44,7 +49,7 @@ registerSuite({
 				return check(axe.check({
 					source: require.toUrl('../data/good_page.html'),
 					remote: null
-				}));
+				}), /A remote is required/);
 			}
 		};
 	})(),

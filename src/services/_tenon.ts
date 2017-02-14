@@ -4,7 +4,7 @@
  */
 
 import { A11yResults } from '../common';
-import * as fs from 'fs';
+import { statSync } from 'fs';
 
 export interface TenonResults {
 	apiErrors: any[];
@@ -140,7 +140,7 @@ export function toA11yResults(tenonResults: TenonResults): A11yResults {
 
 export function fileExists(filename: string) {
 	try {
-		return fs.statSync(filename).isFile();
+		return statSync(filename).isFile();
 	}
 	catch (error) {
 		if (error.code === 'ENOENT') {

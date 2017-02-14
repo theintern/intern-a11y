@@ -1,8 +1,8 @@
 {
   "name": "intern-a11y",
   "version": "0.1.2-pre",
-  "main": "src/index.js",
-  "types": "src/index.d.ts",
+  "main": "index.js",
+  "types": "index.d.ts",
   "description": "Intern-a11y. An accessibility testing helper for Intern.",
   "repository": {
     "type": "git",
@@ -14,12 +14,9 @@
   },
   "devDependencies": {
     "@types/es6-promise": "0.0.31",
-    "@types/shelljs": "0.3.32",
-    "chokidar": "1.6.0",
     "intern": "~3.4.0",
-    "shelljs": "0.7.4",
-    "typescript": "~2.0.0",
-    "semver": "5.3.0"
+    "intern-dev": "https://github.com/theintern/intern-dev/releases/download/0.1.5/intern-dev-0.1.5.tgz",
+    "typescript": "~2.1.0"
   },
   "peerDependencies": {
     "intern": "~3.4.0"
@@ -34,10 +31,23 @@
   ],
   "homepage": "http://github.com/theintern/intern-a11y",
   "scripts": {
-    "build": "node ./support/build.js",
-    "clean": "node ./support/clean.js",
-    "test": "node ./support/test.js",
-    "watch": "node ./support/watch.js",
-    "release": "node ./support/release.js"
+    "build": "intern-dev-clean && intern-dev-build",
+    "clean": "intern-dev-clean",
+    "lint": "intern-dev-lint",
+    "release": "intern-dev-release",
+    "test": "intern-dev-build && NODE_PATH=_build intern-dev-test",
+    "watch": "intern-dev-watch"
+  },
+  "internDev": {
+    "resources": {
+      ".": [
+        "tests/**/*.html"
+      ]
+    },
+    "configs": [
+      "tsconfig.json",
+      "tests/tsconfig.json"
+    ],
+    "publishDir": "_build/src"
   }
 }

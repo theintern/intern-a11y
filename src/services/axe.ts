@@ -1,7 +1,7 @@
-import * as fs from 'fs';
-import * as Command from 'leadfoot/Command';
+import { readFileSync } from 'fs';
 import { A11yResults, A11yError } from '../common';
 import { AxeResults, toA11yResults } from './_axe';
+import Command = require('leadfoot/Command');
 
 export interface AxeTestOptions {
 	config?: {
@@ -54,7 +54,7 @@ export function createChecker(options?: AxeTestOptions) {
 	return function (this: Command<any>) {
 		options = options || {};
 		const axePath = require.resolve('axe-core/axe.min');
-		const axeScript = fs.readFileSync(axePath, { encoding: 'utf8' });
+		const axeScript = readFileSync(axePath, { encoding: 'utf8' });
 		const axeContext = options.context;
 
 		const config = options.config;

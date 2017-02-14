@@ -1,7 +1,7 @@
 import * as registerSuite from 'intern!object';
 import * as assert from 'intern/chai!assert';
 import * as fs from 'intern/dojo/node!fs';
-import { TenonResults, toA11yResults } from 'intern/dojo/node!../../../../../src/services/_tenon';
+import { TenonResults, toA11yResults } from 'intern/dojo/node!src/services/_tenon';
 
 import { IRequire } from 'dojo/loader';
 declare const require: IRequire;

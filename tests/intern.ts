@@ -20,8 +20,8 @@ export const loaders = {
 
 export const loaderOptions = {
 	packages: [
-		{ name: 'src', location: 'dist/src' },
-		{ name: 'tests', location: 'dist/tests' }
+		{ name: 'src', location: '_build/src' },
+		{ name: 'tests', location: '_build/tests' }
 	]
 };
 

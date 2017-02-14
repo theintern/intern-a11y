@@ -1,8 +1,8 @@
-import * as registerSuite from 'intern!object';
-import * as Test from 'intern/lib/Test';
-import * as assert from 'intern/chai!assert';
-import * as tenon from 'intern/dojo/node!../../../../../src/services/tenon';
-import * as fs from 'intern/dojo/node!fs';
+import registerSuite = require('intern!object');
+import assert = require('intern/chai!assert');
+import Test = require('intern/lib/Test');
+import * as tenon from 'intern/dojo/node!src/services/tenon';
+import { readFileSync } from 'intern/dojo/node!fs';
 
 import { IRequire } from 'dojo/loader';
 declare const require: IRequire;
@@ -45,7 +45,7 @@ registerSuite({
 					this.skip('missing API key');
 				}
 				return check({
-					source: fs.readFileSync(require.toUrl('../data/bad_page.html'), { encoding: 'utf8' })
+					source: readFileSync(require.toUrl('../data/bad_page.html'), { encoding: 'utf8' })
 				});
 			},
 

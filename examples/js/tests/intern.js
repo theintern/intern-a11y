@@ -20,7 +20,7 @@ define([ 'intern' ], function (intern) {
 
 		reporters: [
 			{
-				id: 'dojo/node!intern-a11y/src/A11yReporter',
+				id: 'dojo/node!intern-a11y/A11yReporter',
 				filename: 'a11y-report.html'
 			},
 			intern.mode === 'client' ? 'Console' : 'Runner'

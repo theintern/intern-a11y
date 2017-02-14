@@ -1,5 +1,5 @@
 import { services } from 'intern-a11y';
-import * as path from 'path';
+import { join } from 'path';
 import { assert } from 'chai';
 import { TestModuleInit } from './interfaces';
 
@@ -18,7 +18,7 @@ export const init: TestModuleInit = function (registerSuite) {
 		},
 
 		'file name'() {
-			return tenon.check({ source: path.join(__dirname, 'data', 'page.html') });
+			return tenon.check({ source: join(__dirname, 'data', 'page.html') });
 		}
 	});
 }

@@ -1,6 +1,6 @@
-import * as https from 'https';
-import * as querystring from 'querystring';
-import * as fs from 'fs';
+import { request as httpsRequest } from 'https';
+import { stringify } from 'querystring';
+import { readFileSync } from 'fs';
 import { A11yError, A11yResults } from '../common';
 import { TenonResults, toA11yResults, fileExists } from './_tenon';
 
@@ -58,16 +58,16 @@ export function check(options: TenonTestOptions) {
 		}
 		else if (fileExists(source)) {
 			// source is a file name
-			queryData.src = fs.readFileSync(source, { encoding: 'utf8' });
+			queryData.src = readFileSync(source, { encoding: 'utf8' });
 		}
 		else {
 			// source is raw data
 			queryData.src = source;
 		}
 
-		const data = querystring.stringify(queryData);
+		const data = stringify(queryData);
 
-		const request = https.request({
+		const request = httpsRequest({
 			host: 'tenon.io',
 			path: '/api/',
 			method: 'POST',

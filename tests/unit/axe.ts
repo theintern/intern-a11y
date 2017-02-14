@@ -1,7 +1,7 @@
 import * as registerSuite from 'intern!object';
 import * as assert from 'intern/chai!assert';
 import * as fs from 'intern/dojo/node!fs';
-import { toA11yResults } from 'intern/dojo/node!../../../../../src/services/_axe';
+import { toA11yResults } from 'intern/dojo/node!src/services/_axe';
 import { IRequire } from 'dojo/loader';
 
 declare const require: IRequire;

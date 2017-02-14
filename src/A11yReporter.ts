@@ -1,6 +1,6 @@
-import * as Test from 'intern/lib/Test';
-import * as path from 'path';
-import * as fs from 'fs';
+import Test = require('intern/lib/Test');
+import { join } from 'path';
+import { mkdirSync, writeFile, writeFileSync } from 'fs';
 import { A11yResults, A11yViolation } from './common';
 
 class A11yReporter {
@@ -24,7 +24,7 @@ class A11yReporter {
 		else {
 			// ReporterManager will already have created dirname(this.config.filename)
 			try {
-				fs.mkdirSync(this.filename);
+				mkdirSync(this.filename);
 			}
 			catch (error) {
 				if (error.code !== 'EEXIST') {
@@ -45,22 +45,22 @@ class A11yReporter {
 				this.report.push(content);
 			}
 			else {
-				const filename = path.join(this.filename, sanitizeFilename(test.id + '.html'));
-				fs.writeFileSync(filename, renderReport(content));
+				const filename = join(this.filename, sanitizeFilename(test.id + '.html'));
+				writeFileSync(filename, renderReport(content));
 			}
 		}
 	}
 
 	runEnd() {
 		if (this.report) {
-			fs.writeFileSync(this.filename, renderReport(this.report.join('')));
+			writeFileSync(this.filename, renderReport(this.report.join('')));
 		}
 	}
 
 	static writeReport(filename: string, results: A11yResults, id: string) {
 		return new Promise(function (resolve, reject) {
 			const content = renderResults(results, id);
-			fs.writeFile(filename, renderReport(content), function (error) {
+			writeFile(filename, renderReport(content), function (error) {
 				if (error) {
 					reject(error);
 				}
