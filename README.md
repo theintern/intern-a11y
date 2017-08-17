@@ -1,6 +1,6 @@
 # intern-a11y
 
-Accessibility testing for Intern
+Accessibility testing for [Intern](https://github.com/theintern/intern/)
 
 ## How it works
 
@@ -226,8 +226,10 @@ When using `node` or when not specifying a mode, you must provide a Tenon API ke
 $ TENON_API_KEY=<your key> npm test
 ```
 
+<!-- start-github-only -->
 ## License
 
 Intern-a11y is offered under the [New BSD license](LICENSE).
 
 © [SitePen, Inc.](http://sitepen.com) and its [contributors](https://github.com/theintern/intern-a11y/graphs/contributors)
+<!-- end-github-only -->
