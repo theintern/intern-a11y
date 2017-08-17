@@ -2,6 +2,8 @@
 
 Accessibility testing for [Intern](https://github.com/theintern/intern/)
 
+[![Intern](http://theintern.github.io/images/intern-v3.svg)](https://github.com/theintern/intern/tree/3.4/)
+
 ## How it works
 
 Accessibility testing works by having a scanner check a page or page fragment for rule violations. The most commonly used rules are defined in the W3C's [Web Content Accessibility Guidelines](https://www.w3.org/WAI/intro/wcag.php) (WCAG) and the GSA's [Section 508 Standards](https://www.section508.gov/summary-section508-standards). There are twelve general WCAG guidelines at three levels of success criteria: A, AA, and AAA. Scanners can check for violations at any of the levels, and can typically be configured to only check a subset of rules.
