@@ -1,11 +1,10 @@
-import * as fs from 'intern/dojo/node!fs';
+import { statSync, unlinkSync } from 'fs';
 
 export function cleanup(filename: string) {
 	try {
-		fs.statSync(filename);
-		fs.unlinkSync(filename);
-	}
-	catch (error) {
+		statSync(filename);
+		unlinkSync(filename);
+	} catch (error) {
 		if (error.code !== 'ENOENT') {
 			throw error;
 		}
@@ -16,9 +15,8 @@ export function cleanup(filename: string) {
 
 export function fileExists(filename: string) {
 	try {
-		return fs.statSync(filename).isFile();
-	}
-	catch (error) {
+		return statSync(filename).isFile();
+	} catch (error) {
 		if (error.code !== 'ENOENT') {
 			throw error;
 		}

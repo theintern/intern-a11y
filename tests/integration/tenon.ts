@@ -1,95 +1,99 @@
-import registerSuite = require('intern!object');
-import assert = require('intern/chai!assert');
-import Test = require('intern/lib/Test');
-import * as tenon from 'intern/dojo/node!src/services/tenon';
-import { readFileSync } from 'intern/dojo/node!fs';
+import registerSuite, { Tests } from 'intern/lib/interfaces/object';
+import { join } from 'path';
 
-import { IRequire } from 'dojo/loader';
-declare const require: IRequire;
+import { readFileSync } from 'fs';
+import * as tenon from 'src/services/tenon';
+
+const { assert } = intern.getPlugin('chai');
 
 const keyPresent = process.env['TENON_API_KEY'] != null;
 
-registerSuite({
-	name: 'integration/tenon',
-
-	bad: (function () {
+registerSuite('integration/tenon', {
+	bad: (function() {
 		function check(config: tenon.TenonTestOptions) {
 			return tenon.check(config).then(
-				function () {
+				function() {
 					throw new Error('test should not have passed');
 				},
-				function (error) {
+				function(error) {
 					assert.match(error.message, /\d+ a11y violation/);
-					assert.property(error, 'a11yResults', 'expected results to be attached to error');
+					assert.property(
+						error,
+						'a11yResults',
+						'expected results to be attached to error'
+					);
 				}
 			);
 		}
 
-		return {
-			'external url'(this: Test) {
+		return <Tests>{
+			'external url'() {
 				if (!keyPresent) {
 					this.skip('missing API key');
 				}
 				return check({ source: 'http://google.com' });
 			},
 
-			'file name'(this: Test) {
+			'file name'() {
 				if (!keyPresent) {
 					this.skip('missing API key');
 				}
-				return check({ source: require.toUrl('../data/bad_page.html') });
+				return check({ source: 'tests/data/bad_page.html' });
 			},
 
-			'file data'(this: Test) {
+			'file data'() {
 				if (!keyPresent) {
 					this.skip('missing API key');
 				}
 				return check({
-					source: readFileSync(require.toUrl('../data/bad_page.html'), { encoding: 'utf8' })
+					source: readFileSync(
+						join(__dirname, '../data/bad_page.html'),
+						{
+							encoding: 'utf8'
+						}
+					)
 				});
 			},
 
-			fragment(this: Test) {
+			fragment() {
 				if (!keyPresent) {
 					this.skip('missing API key');
 				}
 				return check({
-					source: require.toUrl('../data/bad_fragment.html'),
+					source: 'tests/data/bad_fragment.html',
 					config: { fragment: 1 }
 				});
 			}
 		};
 	})(),
 
-	good: (function () {
-		return {
-			'external url'(this: Test) {
-				if (!keyPresent) {
-					this.skip('missing API key');
-				}
-				return tenon.check({
-					source: 'http://tenon.io/documentation'
-				});
-			},
-
-			'file name'(this: Test) {
-				if (!keyPresent) {
-					this.skip('missing API key');
-				}
-				return tenon.check({
-					source: require.toUrl('../data/good_page.html')
-				});
-			},
-
-			fragment(this: Test) {
-				if (!keyPresent) {
-					this.skip('missing API key');
-				}
-				return tenon.check({
-					source: require.toUrl('../data/good_fragment.html'),
-					config: { fragment: 1 }
-				});
+	good: {
+		'external url'() {
+			if (!keyPresent) {
+				this.skip('missing API key');
 			}
-		};
-	})()
+			return tenon.check({
+				source: 'http://tenon.io/documentation'
+			});
+		},
+
+		'file name'() {
+			if (!keyPresent) {
+				this.skip('missing API key');
+			}
+			return tenon.check({
+				source: 'tests/data/good_page.html'
+			});
+		},
+
+		fragment() {
+			if (!keyPresent) {
+				this.skip('missing API key');
+			}
+			return tenon.check({
+				source: 'tests/data/good_fragment.html',
+				config: { fragment: 1 }
+			});
+		}
+	}
 });

@@ -1,14 +1,10 @@
 {
-  "compilerOptions": {
-    "module": "umd",
-    "moduleResolution": "node",
-    "noImplicitAny": true,
-    "noImplicitThis": true,
-    "removeComments": true,
-    "preserveConstEnums": true,
-    "target": "ES5"
-  },
-  "include": [
-    "./tests/**/*.ts"
-  ]
+	"compilerOptions": {
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"strict": true,
+		"target": "es2015",
+		"types": ["intern"]
+	},
+	"include": ["./tests/**/*.ts"]
 }

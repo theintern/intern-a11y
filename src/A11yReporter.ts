@@ -1,75 +1,127 @@
-import Test = require('intern/lib/Test');
-import { join } from 'path';
-import { mkdirSync, writeFile, writeFileSync } from 'fs';
+import { join, dirname } from 'path';
+import { sync as mkdir } from 'mkdirp';
+import { writeFile, writeFileSync } from 'fs';
+import Test from 'intern/lib/Test';
+import Suite from 'intern/lib/Suite';
+import { Executor } from 'intern/lib/executors/Executor';
 import { A11yResults, A11yViolation } from './common';
 
-class A11yReporter {
-	config: any;
-
+/**
+ * A11yReporter writes test results to a file or a directory of files.
+ */
+export default class A11yReporter {
+	executor: Executor;
 	filename: string;
+	console: Console;
 
-	report: string[];
+	protected _report: string[] | undefined;
+	protected _reportFiles: string[];
 
-	constructor(config: any) {
-		this.config = config;
-		this.filename = this.config.filename;
-
-		if (!this.filename) {
-			this.filename = 'a11y-report';
-		}
-
-		if (/\.html$/.test(this.filename)) {
-			this.report = [];
-		}
-		else {
-			// ReporterManager will already have created dirname(this.config.filename)
-			try {
-				mkdirSync(this.filename);
-			}
-			catch (error) {
-				if (error.code !== 'EEXIST') {
-					throw error;
-				}
-			}
-		}
-	}
-
-	testFail(test: Test) {
-		const error = test.error;
-		let results: A11yResults = (<any> error).a11yResults;
-
-		if (results) {
-			const content = renderResults(results, test.id);
-
-			if (this.report) {
-				this.report.push(content);
-			}
-			else {
-				const filename = join(this.filename, sanitizeFilename(test.id + '.html'));
-				writeFileSync(filename, renderReport(content));
-			}
-		}
-	}
-
-	runEnd() {
-		if (this.report) {
-			writeFileSync(this.filename, renderReport(this.report.join('')));
-		}
-	}
-
+	/**
+	 * WriteReport writes a set of A11yResults to a file
+	 */
 	static writeReport(filename: string, results: A11yResults, id: string) {
-		return new Promise(function (resolve, reject) {
+		return new Promise((resolve, reject) => {
 			const content = renderResults(results, id);
-			writeFile(filename, renderReport(content), function (error) {
+			writeFile(filename, renderReport(content), error => {
 				if (error) {
 					reject(error);
-				}
-				else {
+				} else {
 					resolve(results);
 				}
 			});
 		});
 	}
+
+	constructor(executor: Executor, options?: A11yReporterOptions) {
+		this.executor = executor;
+
+		options = options || {};
+		this.filename = options.filename || 'a11y-report';
+		this.console = options.console || console;
+
+		const reportDir = dirname(this.filename);
+		if (reportDir !== '.') {
+			mkdir(reportDir);
+		}
+
+		if (/\.html$/.test(this.filename)) {
+			// Filename is a single HTML file that will contain multiple
+			// individual reports
+			this._report = [];
+			this._reportFiles = [this.filename];
+		} else {
+			this._reportFiles = [];
+
+			// Filename is a directory that will store multiple reports, one
+			// per file.
+			mkdir(this.filename);
+		}
+
+		executor.on('runEnd', this.runEnd.bind(this));
+		executor.on('suiteEnd', this.suiteEnd.bind(this));
+		executor.on('testEnd', this.testEnd.bind(this));
+	}
+
+	testEnd(test: Test) {
+		// We only care about failing tests
+		if (!test.error) {
+			return;
+		}
+
+		const error = test.error;
+		let results: A11yResults = (<any>error).a11yResults;
+
+		if (results) {
+			const content = renderResults(results, test.id);
+
+			if (this._report) {
+				// Add this report to the reports list
+				this._report.push(content);
+			} else {
+				// Write this report to a file
+				const filename = join(
+					this.filename,
+					sanitizeFilename(test.id + '.html')
+				);
+				writeFileSync(filename, renderReport(content));
+				this._reportFiles.push(filename);
+			}
+		}
+	}
+
+	runEnd() {
+		if (this._reportFiles.length > 0) {
+			this.console.log();
+			for (const file of this._reportFiles) {
+				this.console.log(`A11y report written to ${file}`);
+			}
+			this.console.log();
+		}
+	}
+
+	suiteEnd(suite: Suite) {
+		if (!suite.hasParent) {
+			if (this._report) {
+				writeFileSync(
+					this.filename,
+					renderReport(this._report.join(''))
+				);
+				this._reportFiles.push(this.filename);
+			}
+		}
+	}
+}
+
+export interface A11yReporterOptions {
+	console?: Console;
+	filename?: string;
+}
+
+if (typeof intern !== 'undefined') {
+	intern.registerPlugin('A11yReporter', options => {
+		new A11yReporter(intern, options);
+	});
 }
 
 function escape(str: string) {
@@ -143,7 +195,7 @@ function renderReport(body: string) {
 }
 
 function renderResults(results: A11yResults, id: string) {
-	let out: string[] = [ '<section class="results">' ];
+	let out: string[] = ['<section class="results">'];
 
 	out.push(`<h1>${id}</h1>`);
 	out.push(`<ul class="meta">
@@ -153,14 +205,15 @@ function renderResults(results: A11yResults, id: string) {
 
 	if (results.violations.length > 0) {
 		out = out.concat(results.violations.map(renderViolation));
-	}
-	else {
+	} else {
 		out = out.concat('<p>No violations</p>');
 	}
 
 	out.push(`<div class="raw-results">
 		<button data-action="toggle-open"><span class="when-open">Hide</span><span class="when-closed">Show</span> raw results</button>
-		<pre class="when-open">${escape(JSON.stringify(results.originalResults, null, '  '))}</pre>
+		<pre class="when-open">${escape(
+			JSON.stringify(results.originalResults, null, '  ')
+		)}</pre>
 	</div>`);
 
 	return out.concat('</section>').join('');
@@ -185,8 +238,12 @@ function renderViolation(violation: A11yViolation) {
 	return `<div class="violation">
 		<div class="header">
 			<div class="target"><h2>Target</h2><span class="selector">${target}</span></div>
-			<div class="message"><h2>Summary</h2><a href="${violation.reference}">${escape(violation.message)}</a></div>
-			<div class="description"><h2>Description</h2>${escape(violation.description)}</div>
+			<div class="message"><h2>Summary</h2><a href="${violation.reference}">${escape(
+		violation.message
+	)}</a></div>
+			<div class="description"><h2>Description</h2>${escape(
+				violation.description
+			)}</div>
 			${standards}
 		</div>
 		<pre class="snippet">${escape(violation.snippet)}</pre>
@@ -194,10 +251,5 @@ function renderViolation(violation: A11yViolation) {
 }
 
 function sanitizeFilename(filename: string) {
-	return filename
-		.replace(/[/?<>\\:*|"]/g, '_')
-		.replace(/[.\s]+$/, '');
+	return filename.replace(/[/?<>\\:*|"]/g, '_').replace(/[.\s]+$/, '');
 }
-
-// Use TS default export for improved CJS interop
-export = A11yReporter;

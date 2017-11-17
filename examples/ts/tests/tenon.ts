@@ -1,24 +1,30 @@
-import { services } from 'intern-a11y';
+import { check } from '@theintern/a11y/services/tenon';
 import { join } from 'path';
-import { assert } from 'chai';
-import { TestModuleInit } from './interfaces';
 
-const tenon = services.tenon;
+const { registerSuite } = intern.getInterface('object');
+const { assert } = intern.getPlugin('chai');
 
-export const init: TestModuleInit = function (registerSuite) {
-	registerSuite({
-		name: 'tenon',
+const keyPresent = process.env['TENON_API_KEY'] != null;
 
-		'external url'() {
-			return tenon.check({ source: 'http://google.com' })
-				.catch(function (error) {
-					// we expect this to fail
-					assert.match(error.message, /a11y violation/);
-				});
-		},
-
-		'file name'() {
-			return tenon.check({ source: join(__dirname, 'data', 'page.html') });
+registerSuite('tenon', {
+	'external url'() {
+		if (!keyPresent) {
+			this.skip('missing Tenon API key');
 		}
-	});
-}
+		return check({ source: 'http://tenon.io/documentation' });
+	},
+
+	'file name'() {
+		if (!keyPresent) {
+			this.skip('missing Tenon API key');
+		}
+		return check({ source: join(__dirname, 'data', 'page.html') });
+	},
+
+	'bad page'() {
+		if (!keyPresent) {
+			this.skip('missing Tenon API key');
+		}
+		return check({ source: join(__dirname, 'data', 'bad_page.html') });
+	}
+});

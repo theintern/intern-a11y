@@ -1,11 +1,13 @@
 {
-  "name": "intern-a11y-JS-example",
-  "devDependencies": {
-	"intern": "^3.3.0",
-	"intern-a11y": "file:../../_build/src"
-  },
-  "scripts": {
-    "test": "node support/test.js",
-    "clean": "node support/clean.js"
-  }
+	"name": "intern-a11y-JS-example",
+	"private": true,
+	"dependencies": {
+		"@theintern/a11y": "file:../../_build/src",
+		"intern": "~4.1.0",
+		"rimraf": "~2.6.2"
+	},
+	"scripts": {
+		"test": "intern",
+		"clean": "rimraf a11y-report"
+	}
 }

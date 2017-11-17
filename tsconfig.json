@@ -1,20 +1,12 @@
 {
-  "compilerOptions": {
-    "declaration": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "noImplicitAny": true,
-    "noImplicitThis": true,
-    "outDir": "./_build",
-    "preserveConstEnums": true,
-    "removeComments": true,
-    "rootDir": ".",
-    "sourceMap": true
-  },
-  "files": [
-    "node_modules/intern/typings/intern/intern.d.ts"
-  ],
-  "include": [
-    "./src/**/*.ts"
-  ]
+	"extends": "./node_modules/@theintern/dev/tsconfig-base.json",
+	"compilerOptions": {
+		"declaration": true,
+		"importHelpers": true,
+		"lib": ["es5", "es2015.promise", "es2015.symbol.wellknown", "dom"],
+		"outDir": "./_build",
+		"rootDir": ".",
+		"types": ["intern"]
+	},
+	"include": ["./src/**/*.ts"]
 }

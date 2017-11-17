@@ -1,84 +1,89 @@
-import * as registerSuite from 'intern!object';
-import * as Test from 'intern/lib/Test';
-import * as assert from 'intern/chai!assert';
-import * as axe from 'intern/dojo/node!src/services/axe';
-import { A11yResults } from 'intern/dojo/node!src/common';
+import registerSuite, { Tests } from 'intern/lib/interfaces/object';
+import { createChecker, check } from 'src/services/axe';
+import { A11yResults } from 'src/common';
 
-import { IRequire } from 'dojo/loader';
-declare const require: IRequire;
+const { assert } = intern.getPlugin('chai');
 
-registerSuite({
-	name: 'integration/aXe',
-
-	bad: (function () {
-		function check(promise: Promise<A11yResults>, errorMatcher?: RegExp) {
+registerSuite('integration/aXe', {
+	bad: (function() {
+		function runCheck(
+			promise: PromiseLike<A11yResults>,
+			errorMatcher?: RegExp
+		) {
 			return promise.then(
-				function () {
+				function() {
 					throw new Error('test should not have passed');
 				},
-				function (error) {
+				function(error) {
 					if (errorMatcher) {
 						assert.match(error.message, errorMatcher);
-					}
-					else {
+					} else {
 						assert.match(error.message, /\d+ a11y violation/);
-						assert.property(error, 'a11yResults', 'expected results to be attached to error');
+						assert.property(
+							error,
+							'a11yResults',
+							'expected results to be attached to error'
+						);
 					}
 				}
 			);
 		}
 
-		return {
-			Command(this: Test) {
-				return check(this.remote
-					.get(require.toUrl('../data/bad_page.html'))
-					.sleep(1000)
-					.then(axe.createChecker())
+		return <Tests>{
+			Command() {
+				return runCheck(
+					this.remote
+						.get('tests/data/bad_page.html')
+						.sleep(1000)
+						.then(createChecker())
 				);
 			},
 
-			standalone(this: Test) {
-				return check(axe.check({
-					source: require.toUrl('../data/bad_page.html'),
-					remote: this.remote,
-					waitFor: 1000
-				}));
+			standalone() {
+				return runCheck(
+					check({
+						source: 'tests/data/bad_page.html',
+						remote: this.remote,
+						waitFor: 1000
+					})
+				);
 			},
 
 			'missing remote'() {
-				return check(axe.check({
-					source: require.toUrl('../data/good_page.html'),
-					remote: null
-				}), /A remote is required/);
+				return runCheck(
+					check({
+						source: 'tests/data/good_page.html',
+						remote: <any>undefined
+					}),
+					/A remote is required/
+				);
 			}
 		};
 	})(),
 
-	good: (function () {
-		return {
-			Command(this: Test) {
-				return this.remote
-					.get(require.toUrl('../data/good_page.html'))
-					.sleep(1000)
-					.then(axe.createChecker());
-			},
+	good: {
+		Command() {
+			return this.remote
+				.get('tests/data/good_page.html')
+				.sleep(1000)
+				.then(createChecker());
+		},
 
-			standalone(this: Test) {
-				return axe.check({
-					source: require.toUrl('../data/good_page.html'),
-					remote: this.remote,
-					waitFor: 1000
-				});
-			},
+		standalone() {
+			return check({
+				source: 'tests/data/good_page.html',
+				remote: this.remote,
+				waitFor: 1000
+			});
+		},
 
-			'partial page'(this: Test) {
-				return axe.check({
-					source: require.toUrl('../data/bad_page.html'),
-					remote: this.remote,
-					waitFor: 1000,
-					context: '#heading'
-				});
-			}
-		};
-	})()
+		'partial page'() {
+			return check({
+				source: 'tests/data/bad_page.html',
+				remote: this.remote,
+				waitFor: 1000,
+				context: '#heading'
+			});
+		}
+	}
 });

@@ -1,33 +1,28 @@
-import { services } from 'intern-a11y';
-import Test = require('intern/lib/Test');
+import { check, createChecker } from '@theintern/a11y/services/axe';
 import { join } from 'path';
-import { assert } from 'chai';
-import { TestModuleInit } from './interfaces';
-import { IRequire } from 'dojo/loader';
 
-const axe = services.axe;
+const { registerSuite } = intern.getInterface('object');
+const { assert } = intern.getPlugin('chai');
 
-declare const require: IRequire;
+registerSuite('aXe', {
+	'external page'() {
+		return this.remote
+			.get('http://google.com')
+			.sleep(2000)
+			.then(createChecker());
+	},
 
-export const init: TestModuleInit = function (registerSuite) {
-	registerSuite({
-		name: 'aXe',
+	'file name'() {
+		return check({
+			remote: this.remote,
+			source: join(__dirname, 'data', 'page.html')
+		});
+	},
 
-		'external page'(this: Test) {
-			return this.remote
-				.get('http://google.com')
-				.sleep(2000)
-				.then(axe.createChecker())
-				.catch(function (error) {
-					assert.match(error.message, /a11y violation/);
-				});
-		},
-
-		'file name'(this: Test) {
-			return axe.check({
-				remote: this.remote,
-				source: join(__dirname, 'data', 'page.html')
-			});
-		}
-	});
-}
+	'bad page'() {
+		return check({
+			remote: this.remote,
+			source: join(__dirname, 'data', 'bad_page.html')
+		});
+	}
+});

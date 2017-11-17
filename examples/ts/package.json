@@ -1,13 +1,15 @@
 {
-  "name": "intern-a11y-TS-example",
-  "devDependencies": {
-	"intern": "^3.4.0",
-	"intern-a11y": "file:../../_build/src",
-    "typescript": "~2.1.0"
-  },
-  "scripts": {
-    "test": "node support/test.js",
-    "build": "tsc",
-    "clean": "node support/clean.js"
-  }
+	"name": "intern-a11y-TS-example",
+	"private": true,
+	"dependencies": {
+		"intern": "~4.1.0",
+		"@theintern/a11y": "file:../../_build/src",
+		"rimraf": "~2.6.2",
+		"typescript": "~2.6.0"
+	},
+	"scripts": {
+		"test": "intern",
+		"build": "tsc",
+		"clean": "rimraf a11y-report 'tests/**/*.js'"
+	}
 }

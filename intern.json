@@ -1,0 +1,19 @@
+{
+	"capabilities": { "name": "intern-a11y" },
+	"environments": [
+		"node",
+		{
+			"browserName": "chrome",
+			"fixSessionCapabilities": false
+		}
+	],
+	"node": {
+		"suites": [
+			"_build/tests/unit/**/*.js",
+			"_build/tests/integration/tenon.js"
+		]
+	},
+	"functionalSuites": "_build/tests/integration/axe.js",
+	"coverage": "_build/src/**/*.js",
+	"filterErrorStack": true
+}

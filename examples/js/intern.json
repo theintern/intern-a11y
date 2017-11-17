@@ -1,0 +1,12 @@
+{
+	"environments": [
+		"node",
+		{ "browserName": "chrome", "fixSessionCapabilities": "no-detect" }
+	],
+	"functionalSuites": "tests/axe.js",
+	"node": {
+		"suites": "tests/tenon.js"
+	},
+	"filterErrorStack": true,
+	"plugins": "@theintern/a11y/A11yReporter.js"
+}

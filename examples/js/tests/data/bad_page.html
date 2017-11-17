@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Test page</title>
+	</head>
+	<body>
+		<script>
+			setTimeout(function () {
+				var div = document.createElement('div');
+				div.innerHTML = 'Foo';
+				div.className = 'bar';
+				document.body.appendChild(div);
+			}, 500);
+		</script>
+
+		<div id="heading">
+			<h1>Testing</h1>
+		</div>
+	</body>
+</html>
