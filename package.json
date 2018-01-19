@@ -13,7 +13,7 @@
     "mkdirp": "~0.5.1"
   },
   "devDependencies": {
-    "@theintern/dev": "~0.6.1",
+    "@theintern/dev": "~0.6.2",
     "intern": "~4.1.2"
   },
   "peerDependencies": {
